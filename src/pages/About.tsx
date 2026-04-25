@@ -86,6 +86,25 @@ const About = () => {
             </div>
           </div>
 
+          {/* Logo Credentials */}
+          <div className="mt-8 p-5 rounded-2xl bg-muted/50 border border-border/30">
+            <div className="flex items-start gap-4">
+              <img 
+                src={logo} 
+                alt="Logo Gibikey Studio" 
+                className="h-12 w-12 object-contain shrink-0" 
+              />
+              <div>
+                <h3 className="font-display text-base font-semibold text-foreground">Kredensial Logo</h3>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                  Logo dan identitas visual Gibikey Studio merupakan hak cipta milik Gibikey Studio. Logo ini digunakan secara eksklusif untuk aplikasi Resepku dan produk-produk digital lainnya yang dikembangkan oleh tim Gibikey Studio.
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  © {new Date().getFullYear()} Gibikey Studio. All rights reserved.
+                </p>
+              </div>
+            </div>          </div>
+
           {/* Footer */}
           <div className="mt-10 pt-6 border-t border-border/50 text-center">
             <p className="text-xs text-muted-foreground">
