@@ -1,5 +1,5 @@
 import { useState, useEffect, KeyboardEvent } from "react";
-import { Sparkles, Plus, ChefHat, Loader2, Heart } from "lucide-react";
+import { Sparkles, Plus, ChefHat, Loader2, Heart, RotateCcw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { IngredientChip } from "@/components/IngredientChip";
