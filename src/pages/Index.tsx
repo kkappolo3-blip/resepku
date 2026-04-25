@@ -112,7 +112,7 @@ const Index = () => {
             </div>
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground transition-smooth hover:bg-secondary/80"
+              className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-2 min-h-[40px] text-xs font-medium text-secondary-foreground transition-smooth hover:bg-secondary/80 active:scale-95"
               title="Reset ke mode bersih"
             >
               <RotateCcw className="h-3.5 w-3.5" />
@@ -135,19 +135,22 @@ const Index = () => {
           <label className="text-sm font-semibold text-foreground">Bahan yang kamu punya</label>
 
           <div className="mt-3 flex gap-2">
-            <div className="flex-1 flex items-center gap-2 rounded-2xl border border-input bg-background px-4 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-smooth">
+            <div className="flex-1 flex items-center gap-2 rounded-2xl border border-input bg-background px-4 py-3 min-h-[48px] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-smooth">
               <Plus className="h-4 w-4 text-muted-foreground shrink-0" />
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={onKey}
                 placeholder="contoh: telur, ayam, bawang…"
-                className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground/60"
+                inputMode="text"
+                autoComplete="off"
+                autoCapitalize="none"
+                className="flex-1 bg-transparent outline-none text-base sm:text-sm placeholder:text-muted-foreground/60"
               />
             </div>
             <button
               onClick={() => addIngredient(input)}
-              className="rounded-2xl bg-foreground px-4 text-sm font-semibold text-background transition-smooth hover:bg-foreground/85"
+              className="rounded-2xl bg-foreground px-5 min-h-[48px] text-sm font-semibold text-background transition-smooth hover:bg-foreground/85 active:scale-95"
             >
               Tambah
             </button>
@@ -181,8 +184,8 @@ const Index = () => {
                         onClick={() => addIngredient(s)}
                         className={
                           isHistory
-                            ? "rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground"
-                            : "rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                            ? "rounded-full border border-primary/40 bg-primary/10 px-3.5 py-2 min-h-[36px] text-xs sm:text-sm text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground active:scale-95"
+                            : "rounded-full border border-border bg-background px-3.5 py-2 min-h-[36px] text-xs sm:text-sm text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary active:scale-95"
                         }
                       >
                         + {s}
