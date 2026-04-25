@@ -299,6 +299,11 @@ const Index = () => {
         <p>
           Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
         </p>
+        <div className="flex items-center gap-4 mt-2">
+          <a href="/about" className="text-muted-foreground hover:text-foreground transition-smooth underline underline-offset-2">Tentang Kami</a>
+          <span className="text-border">|</span>
+          <span>© {new Date().getFullYear()} Gibikey Studio</span>
+        </div>
       </footer>
     </main>
   );
