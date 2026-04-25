@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,12 +6,31 @@ import { IngredientChip } from "@/components/IngredientChip";
 import { RecipeCard, type Recipe } from "@/components/RecipeCard";
 
 const SUGGESTED = ["Telur", "Ayam", "Bawang merah", "Bawang putih", "Cabai", "Tomat", "Tahu", "Tempe", "Nasi", "Mie instan", "Kecap manis", "Santan"];
+const HISTORY_KEY = "resepku.ingredient.history.v1";
+const MAX_HISTORY = 24;
 
 const Index = () => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [history, setHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) setHistory(JSON.parse(raw));
+    } catch { /* ignore */ }
+  }, []);
+
+  const pushHistory = (item: string) => {
+    setHistory(prev => {
+      const filtered = prev.filter(h => h.toLowerCase() !== item.toLowerCase());
+      const next = [item, ...filtered].slice(0, MAX_HISTORY);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  };
 
   const addIngredient = (raw: string) => {
     const v = raw.trim();
@@ -21,6 +40,7 @@ const Index = () => {
       return;
     }
     setIngredients(prev => [...prev, v]);
+    pushHistory(v);
     setInput("");
   };
 
