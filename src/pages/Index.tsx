@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,12 +6,31 @@ import { IngredientChip } from "@/components/IngredientChip";
 import { RecipeCard, type Recipe } from "@/components/RecipeCard";
 
 const SUGGESTED = ["Telur", "Ayam", "Bawang merah", "Bawang putih", "Cabai", "Tomat", "Tahu", "Tempe", "Nasi", "Mie instan", "Kecap manis", "Santan"];
+const HISTORY_KEY = "resepku.ingredient.history.v1";
+const MAX_HISTORY = 24;
 
 const Index = () => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [history, setHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) setHistory(JSON.parse(raw));
+    } catch { /* ignore */ }
+  }, []);
+
+  const pushHistory = (item: string) => {
+    setHistory(prev => {
+      const filtered = prev.filter(h => h.toLowerCase() !== item.toLowerCase());
+      const next = [item, ...filtered].slice(0, MAX_HISTORY);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  };
 
   const addIngredient = (raw: string) => {
     const v = raw.trim();
@@ -21,6 +40,7 @@ const Index = () => {
       return;
     }
     setIngredients(prev => [...prev, v]);
+    pushHistory(v);
     setInput("");
   };
 
@@ -112,22 +132,49 @@ const Index = () => {
             </div>
           )}
 
-          {ingredients.length === 0 && (
-            <div className="mt-4">
-              <p className="text-xs text-muted-foreground mb-2">Saran cepat:</p>
-              <div className="flex flex-wrap gap-2">
-                {SUGGESTED.map(s => (
+          {ingredients.length === 0 && (() => {
+            const lowerHistory = history.map(h => h.toLowerCase());
+            const merged = [
+              ...history,
+              ...SUGGESTED.filter(s => !lowerHistory.includes(s.toLowerCase())),
+            ];
+            return (
+              <div className="mt-4">
+                <p className="text-xs text-muted-foreground mb-2">
+                  Saran cepat{history.length > 0 ? " (riwayat kamu di depan)" : ""}:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {merged.map((s, i) => {
+                    const isHistory = i < history.length;
+                    return (
+                      <button
+                        key={`${s}-${i}`}
+                        onClick={() => addIngredient(s)}
+                        className={
+                          isHistory
+                            ? "rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground"
+                            : "rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                        }
+                      >
+                        + {s}
+                      </button>
+                    );
+                  })}
+                </div>
+                {history.length > 0 && (
                   <button
-                    key={s}
-                    onClick={() => addIngredient(s)}
-                    className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                    onClick={() => {
+                      setHistory([]);
+                      try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
+                    }}
+                    className="mt-2 text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2"
                   >
-                    + {s}
+                    Hapus riwayat
                   </button>
-                ))}
+                )}
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           <button
             onClick={handleGenerate}
@@ -180,7 +227,7 @@ const Index = () => {
       </section>
 
       <footer className="container mx-auto px-4 max-w-3xl pb-10 text-center text-xs text-muted-foreground">
-        Dibuat dengan ❤️ — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+        Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
       </footer>
     </main>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket } from "lucide-react";
+import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface Recipe {
@@ -22,6 +22,26 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
     recipe.matchPercent >= 90 ? "bg-secondary text-secondary-foreground"
       : recipe.matchPercent >= 70 ? "bg-accent/20 text-accent-foreground"
       : "bg-muted text-muted-foreground";
+
+  const shareToWhatsApp = () => {
+    const lines = [
+      `${recipe.emoji} *${recipe.title}*`,
+      "",
+      recipe.description,
+      "",
+      `⏱️ ${recipe.cookTime}  •  👨‍🍳 ${recipe.difficulty}  •  🍽️ ${recipe.servings}`,
+      "",
+      "*Bahan:*",
+      ...recipe.usedIngredients.map(b => `• ${b}`),
+    ];
+    if (recipe.missingIngredients.length > 0) {
+      lines.push("", "*Perlu beli:*", ...recipe.missingIngredients.map(b => `• ${b}`));
+    }
+    lines.push("", "*Langkah:*", ...recipe.steps.map((s, i) => `${i + 1}. ${s}`));
+    lines.push("", "_Dibagikan dari Resepku — by Gibikey Studio_");
+    const text = encodeURIComponent(lines.join("\n"));
+    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <article
@@ -58,13 +78,23 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
           </div>
         )}
 
-        <button
-          onClick={() => setOpen(o => !o)}
-          className="mt-5 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground"
-        >
-          {open ? "Sembunyikan resep" : "Lihat resep lengkap"}
-          <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
-        </button>
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            onClick={() => setOpen(o => !o)}
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground"
+          >
+            {open ? "Sembunyikan resep" : "Lihat resep lengkap"}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+          </button>
+          <button
+            onClick={shareToWhatsApp}
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-sm font-semibold text-white transition-smooth hover:opacity-90"
+            aria-label="Bagikan resep ke WhatsApp"
+          >
+            <Share2 className="h-4 w-4" />
+            Bagikan ke WhatsApp
+          </button>
+        </div>
 
         {open && (
           <div className="mt-5 space-y-4 animate-fade-in-up">
