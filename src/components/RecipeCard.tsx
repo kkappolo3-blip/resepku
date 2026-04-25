@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket, Share2 } from "lucide-react";
+import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket, Share2, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export interface Recipe {
   title: string;
@@ -15,7 +16,14 @@ export interface Recipe {
   steps: string[];
 }
 
-export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number }) => {
+interface RecipeCardProps {
+  recipe: Recipe;
+  index: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: (recipe: Recipe) => void;
+}
+
+export const RecipeCard = ({ recipe, index, isFavorite, onToggleFavorite }: RecipeCardProps) => {
   const [open, setOpen] = useState(false);
 
   const matchColor =
@@ -23,7 +31,7 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
       : recipe.matchPercent >= 70 ? "bg-accent/20 text-accent-foreground"
       : "bg-muted text-muted-foreground";
 
-  const shareToWhatsApp = () => {
+  const buildShareText = () => {
     const lines = [
       `${recipe.emoji} *${recipe.title}*`,
       "",
@@ -39,8 +47,37 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
     }
     lines.push("", "*Langkah:*", ...recipe.steps.map((s, i) => `${i + 1}. ${s}`));
     lines.push("", "_Dibagikan dari Resepku — by Gibikey Studio_");
-    const text = encodeURIComponent(lines.join("\n"));
-    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
+    return lines.join("\n");
+  };
+
+  const shareToWhatsApp = async () => {
+    const text = buildShareText();
+    // Try native Web Share API first (best on mobile, avoids iframe blocks)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: recipe.title, text });
+        return;
+      } catch (err) {
+        if ((err as Error)?.name === "AbortError") return;
+      }
+    }
+    // Fallback: open wa.me in top-level window (escapes iframe)
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    try {
+      const w = window.open("", "_blank", "noopener,noreferrer");
+      if (w) {
+        w.opener = null;
+        w.location.href = url;
+        return;
+      }
+    } catch { /* ignore */ }
+    // Final fallback: copy to clipboard
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Resep disalin! Tempel di WhatsApp ya.");
+    } catch {
+      toast.error("Gagal membuka WhatsApp. Coba buka di tab baru.");
+    }
   };
 
   return (
@@ -59,9 +96,26 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
               <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">{recipe.description}</p>
             </div>
           </div>
-          <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-bold", matchColor)}>
-            {recipe.matchPercent}%
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", matchColor)}>
+              {recipe.matchPercent}%
+            </span>
+            {onToggleFavorite && (
+              <button
+                onClick={() => onToggleFavorite(recipe)}
+                aria-label={isFavorite ? "Hapus dari favorit" : "Tambah ke favorit"}
+                aria-pressed={isFavorite}
+                className={cn(
+                  "rounded-full p-1.5 transition-smooth",
+                  isFavorite
+                    ? "bg-primary/15 text-primary hover:bg-primary/25"
+                    : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                )}
+              >
+                <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
