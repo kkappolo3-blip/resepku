@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket } from "lucide-react";
+import { Clock, Users, ChefHat, ChevronDown, Check, ShoppingBasket, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface Recipe {
