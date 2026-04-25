@@ -184,8 +184,8 @@ const Index = () => {
                         onClick={() => addIngredient(s)}
                         className={
                           isHistory
-                            ? "rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground"
-                            : "rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                            ? "rounded-full border border-primary/40 bg-primary/10 px-3.5 py-2 min-h-[36px] text-xs sm:text-sm text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground active:scale-95"
+                            : "rounded-full border border-border bg-background px-3.5 py-2 min-h-[36px] text-xs sm:text-sm text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary active:scale-95"
                         }
                       >
                         + {s}
