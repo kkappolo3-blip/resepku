@@ -102,12 +102,22 @@ const Index = () => {
         <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden />
 
         <div className="container relative mx-auto px-4 pt-10 pb-8 max-w-3xl">
-          <div className="flex items-center gap-2.5">
-            <img src={logo} alt="Logo Resepku oleh Gibikey Studio" className="h-9 w-9 object-contain" />
-            <div className="flex flex-col leading-tight">
-              <span className="font-display text-lg font-bold tracking-tight text-primary">Resepku</span>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">by Gibikey Studio</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <img src={logo} alt="Logo Resepku oleh Gibikey Studio" className="h-9 w-9 object-contain" />
+              <div className="flex flex-col leading-tight">
+                <span className="font-display text-lg font-bold tracking-tight text-primary">Resepku</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">by Gibikey Studio</span>
+              </div>
             </div>
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground transition-smooth hover:bg-secondary/80"
+              title="Reset ke mode bersih"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset
+            </button>
           </div>
 
           <h1 className="mt-8 font-display text-4xl sm:text-5xl font-bold leading-[1.05] text-foreground">
