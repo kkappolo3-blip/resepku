@@ -86,6 +86,13 @@ const Index = () => {
     }
   };
 
+  const handleReset = () => {
+    setIngredients([]);
+    setRecipes([]);
+    setInput("");
+    toast.success("Mode bersih aktif — mulai dari awal!");
+  };
+
   return (
     <main className="min-h-screen bg-gradient-warm">
       {/* Hero */}
