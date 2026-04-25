@@ -277,8 +277,11 @@ const Index = () => {
         )}
       </section>
 
-      <footer className="container mx-auto px-4 max-w-3xl pb-10 text-center text-xs text-muted-foreground">
-        Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+      <footer className="container mx-auto px-4 max-w-3xl pb-10 flex flex-col items-center gap-3 text-center text-xs text-muted-foreground">
+        <img src={logo} alt="Logo Gibikey Studio" className="h-10 w-10 object-contain opacity-80" />
+        <p>
+          Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+        </p>
       </footer>
     </main>
   );
