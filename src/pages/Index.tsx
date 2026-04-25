@@ -1,10 +1,11 @@
 import { useState, useEffect, KeyboardEvent } from "react";
-import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed, Heart } from "lucide-react";
+import { Sparkles, Plus, ChefHat, Loader2, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { IngredientChip } from "@/components/IngredientChip";
 import { RecipeCard, type Recipe } from "@/components/RecipeCard";
 import { useFavorites } from "@/hooks/useFavorites";
+import logo from "@/assets/logo.png";
 
 const SUGGESTED = ["Telur", "Ayam", "Bawang merah", "Bawang putih", "Cabai", "Tomat", "Tahu", "Tempe", "Nasi", "Mie instan", "Kecap manis", "Santan"];
 const HISTORY_KEY = "resepku.ingredient.history.v1";
@@ -94,9 +95,12 @@ const Index = () => {
         <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden />
 
         <div className="container relative mx-auto px-4 pt-10 pb-8 max-w-3xl">
-          <div className="flex items-center gap-2 text-primary">
-            <UtensilsCrossed className="h-5 w-5" />
-            <span className="font-display text-lg font-bold tracking-tight">Resepku</span>
+          <div className="flex items-center gap-2.5">
+            <img src={logo} alt="Logo Resepku oleh Gibikey Studio" className="h-9 w-9 object-contain" />
+            <div className="flex flex-col leading-tight">
+              <span className="font-display text-lg font-bold tracking-tight text-primary">Resepku</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">by Gibikey Studio</span>
+            </div>
           </div>
 
           <h1 className="mt-8 font-display text-4xl sm:text-5xl font-bold leading-[1.05] text-foreground">
@@ -273,8 +277,11 @@ const Index = () => {
         )}
       </section>
 
-      <footer className="container mx-auto px-4 max-w-3xl pb-10 text-center text-xs text-muted-foreground">
-        Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+      <footer className="container mx-auto px-4 max-w-3xl pb-10 flex flex-col items-center gap-3 text-center text-xs text-muted-foreground">
+        <img src={logo} alt="Logo Gibikey Studio" className="h-10 w-10 object-contain opacity-80" />
+        <p>
+          Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+        </p>
       </footer>
     </main>
   );
