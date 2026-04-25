@@ -1,9 +1,10 @@
 import { useState, useEffect, KeyboardEvent } from "react";
-import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed } from "lucide-react";
+import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { IngredientChip } from "@/components/IngredientChip";
 import { RecipeCard, type Recipe } from "@/components/RecipeCard";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const SUGGESTED = ["Telur", "Ayam", "Bawang merah", "Bawang putih", "Cabai", "Tomat", "Tahu", "Tempe", "Nasi", "Mie instan", "Kecap manis", "Santan"];
 const HISTORY_KEY = "resepku.ingredient.history.v1";
@@ -15,6 +16,13 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [history, setHistory] = useState<string[]>([]);
+  const { favorites, isFavorite, toggleFavorite, clearFavorites } = useFavorites();
+
+  const handleToggleFavorite = (r: Recipe) => {
+    const wasFav = isFavorite(r);
+    toggleFavorite(r);
+    toast.success(wasFav ? "Dihapus dari favorit" : "Disimpan ke favorit ❤️");
+  };
 
   useEffect(() => {
     try {
@@ -213,12 +221,51 @@ const Index = () => {
               <h2 className="font-display text-2xl font-bold">Saran resep ({recipes.length})</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              {recipes.map((r, i) => <RecipeCard key={i} recipe={r} index={i} />)}
+              {recipes.map((r, i) => (
+                <RecipeCard
+                  key={i}
+                  recipe={r}
+                  index={i}
+                  isFavorite={isFavorite(r)}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              ))}
             </div>
           </>
         )}
 
-        {!loading && recipes.length === 0 && ingredients.length === 0 && (
+        {favorites.length > 0 && (
+          <div className="mt-12">
+            <div className="mb-5 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Heart className="h-5 w-5 text-primary fill-current" />
+                <h2 className="font-display text-2xl font-bold">Resep favorit ({favorites.length})</h2>
+              </div>
+              <button
+                onClick={() => {
+                  clearFavorites();
+                  toast.success("Semua favorit dihapus");
+                }}
+                className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+              >
+                Hapus semua
+              </button>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {favorites.map((r, i) => (
+                <RecipeCard
+                  key={`fav-${i}`}
+                  recipe={r}
+                  index={i}
+                  isFavorite
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!loading && recipes.length === 0 && ingredients.length === 0 && favorites.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <span className="text-6xl block mb-4 animate-float">🍳</span>
             <p className="text-sm">Mulai dengan menambahkan bahan di atas</p>
