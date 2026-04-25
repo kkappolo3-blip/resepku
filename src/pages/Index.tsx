@@ -112,7 +112,7 @@ const Index = () => {
             </div>
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground transition-smooth hover:bg-secondary/80"
+              className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-2 min-h-[40px] text-xs font-medium text-secondary-foreground transition-smooth hover:bg-secondary/80 active:scale-95"
               title="Reset ke mode bersih"
             >
               <RotateCcw className="h-3.5 w-3.5" />
