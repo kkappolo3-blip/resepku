@@ -1,4 +1,4 @@
-import { Info, Heart, Sparkles, ChefHat, ArrowLeft } from "lucide-react";
+import { Info, Heart, Sparkles, ChefHat, ArrowLeft, User, Facebook } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import logo from "@/assets/logo.png";
 
@@ -73,6 +73,31 @@ const About = () => {
               </div>
             </div>
 
+            {/* Creator */}
+            <div className="flex gap-4">
+              <div className="shrink-0 w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <User className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h2 className="font-display text-lg font-semibold text-foreground">Pembuat Aplikasi</h2>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                  Aplikasi ini dibuat oleh <span className="font-semibold text-foreground">Bripka Mohamad Khair</span>, seorang anggota Polri yang juga senang berkreasi di dunia digital. Resepku adalah salah satu karya yang lahir dari kecintaan pada teknologi dan masakan Indonesia.
+                </p>
+                <a
+                  href="https://www.facebook.com/kaka.gibikey.khair"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-4 py-2.5 min-h-[44px] text-sm font-semibold text-white transition-smooth hover:opacity-90 active:scale-95"
+                >
+                  <Facebook className="h-4 w-4" />
+                  DM via Facebook: Kaka Gibikey Khair
+                </a>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Punya saran, masukan, atau ingin sekadar menyapa? Jangan ragu untuk DM ya! 👋
+                </p>
+              </div>
+            </div>
+
             <div className="flex gap-4">
               <div className="shrink-0 w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
                 <Heart className="h-5 w-5 text-primary" />
@@ -80,7 +105,7 @@ const About = () => {
               <div>
                 <h2 className="font-display text-lg font-semibold text-foreground">Ucapan Terima Kasih</h2>
                 <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                  Terima kasih telah menggunakan Resepku! Kami harap aplikasi ini membantu kamu menemukan inspirasi masakan baru. Jika ada saran atau masukan, jangan ragu untuk menghubungi kami.
+                  Terima kasih telah menggunakan Resepku! Kami harap aplikasi ini membantu kamu menemukan inspirasi masakan baru.
                 </p>
               </div>
             </div>
