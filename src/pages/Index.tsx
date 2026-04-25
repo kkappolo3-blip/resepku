@@ -1,16 +1,189 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, KeyboardEvent } from "react";
+import { Sparkles, Plus, ChefHat, Loader2, UtensilsCrossed } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { IngredientChip } from "@/components/IngredientChip";
+import { RecipeCard, type Recipe } from "@/components/RecipeCard";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const SUGGESTED = ["Telur", "Ayam", "Bawang merah", "Bawang putih", "Cabai", "Tomat", "Tahu", "Tempe", "Nasi", "Mie instan", "Kecap manis", "Santan"];
+
+const Index = () => {
+  const [ingredients, setIngredients] = useState<string[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+
+  const addIngredient = (raw: string) => {
+    const v = raw.trim();
+    if (!v) return;
+    if (ingredients.some(i => i.toLowerCase() === v.toLowerCase())) {
+      toast.info(`"${v}" sudah ditambahkan`);
+      return;
+    }
+    setIngredients(prev => [...prev, v]);
+    setInput("");
+  };
+
+  const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addIngredient(input);
+    } else if (e.key === "Backspace" && !input && ingredients.length) {
+      setIngredients(prev => prev.slice(0, -1));
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (ingredients.length === 0) {
+      toast.error("Tambahkan minimal 1 bahan dulu ya");
+      return;
+    }
+    setLoading(true);
+    setRecipes([]);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-recipes", {
+        body: { ingredients },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      const list: Recipe[] = (data?.recipes ?? []).sort((a: Recipe, b: Recipe) => b.matchPercent - a.matchPercent);
+      setRecipes(list);
+      if (list.length === 0) toast.info("Tidak ada resep ditemukan, coba tambah bahan lain.");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <main className="min-h-screen bg-gradient-warm">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero opacity-[0.07]" aria-hidden />
+        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-primary/20 blur-3xl animate-float" aria-hidden />
+        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl animate-float" style={{ animationDelay: "2s" }} aria-hidden />
+
+        <div className="container relative mx-auto px-4 pt-10 pb-8 max-w-3xl">
+          <div className="flex items-center gap-2 text-primary">
+            <UtensilsCrossed className="h-5 w-5" />
+            <span className="font-display text-lg font-bold tracking-tight">Resepku</span>
+          </div>
+
+          <h1 className="mt-8 font-display text-4xl sm:text-5xl font-bold leading-[1.05] text-foreground">
+            Punya bahan apa <span className="text-primary">di dapur?</span>
+          </h1>
+          <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-xl">
+            Ketik bahan yang kamu punya. AI akan memberi ide masakan yang bisa kamu buat sekarang juga — lengkap dengan langkahnya.
+          </p>
+        </div>
+      </section>
+
+      {/* Input card */}
+      <section className="container mx-auto px-4 max-w-3xl">
+        <div className="rounded-3xl bg-card p-5 sm:p-6 shadow-warm border border-border/50">
+          <label className="text-sm font-semibold text-foreground">Bahan yang kamu punya</label>
+
+          <div className="mt-3 flex gap-2">
+            <div className="flex-1 flex items-center gap-2 rounded-2xl border border-input bg-background px-4 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-smooth">
+              <Plus className="h-4 w-4 text-muted-foreground shrink-0" />
+              <input
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={onKey}
+                placeholder="contoh: telur, ayam, bawang…"
+                className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground/60"
+              />
+            </div>
+            <button
+              onClick={() => addIngredient(input)}
+              className="rounded-2xl bg-foreground px-4 text-sm font-semibold text-background transition-smooth hover:bg-foreground/85"
+            >
+              Tambah
+            </button>
+          </div>
+
+          {ingredients.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {ingredients.map((b, i) => (
+                <IngredientChip key={`${b}-${i}`} label={b} onRemove={() => setIngredients(prev => prev.filter((_, idx) => idx !== i))} />
+              ))}
+            </div>
+          )}
+
+          {ingredients.length === 0 && (
+            <div className="mt-4">
+              <p className="text-xs text-muted-foreground mb-2">Saran cepat:</p>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTED.map(s => (
+                  <button
+                    key={s}
+                    onClick={() => addIngredient(s)}
+                    className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                  >
+                    + {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleGenerate}
+            disabled={loading}
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-hero px-5 py-3.5 font-semibold text-primary-foreground shadow-warm transition-smooth hover:shadow-glow hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" /> Mencari resep…
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-5 w-5" /> Cari resep yang bisa dibuat
+              </>
+            )}
+          </button>
+        </div>
+      </section>
+
+      {/* Results */}
+      <section className="container mx-auto px-4 max-w-3xl py-10">
+        {loading && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-48 rounded-2xl bg-muted/60 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-background/60 to-transparent bg-[length:200%_100%] animate-shimmer" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!loading && recipes.length > 0 && (
+          <>
+            <div className="mb-5 flex items-center gap-2">
+              <ChefHat className="h-5 w-5 text-primary" />
+              <h2 className="font-display text-2xl font-bold">Saran resep ({recipes.length})</h2>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {recipes.map((r, i) => <RecipeCard key={i} recipe={r} index={i} />)}
+            </div>
+          </>
+        )}
+
+        {!loading && recipes.length === 0 && ingredients.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <span className="text-6xl block mb-4 animate-float">🍳</span>
+            <p className="text-sm">Mulai dengan menambahkan bahan di atas</p>
+          </div>
+        )}
+      </section>
+
+      <footer className="container mx-auto px-4 max-w-3xl pb-10 text-center text-xs text-muted-foreground">
+        Dibuat dengan ❤️ — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+      </footer>
+    </main>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
