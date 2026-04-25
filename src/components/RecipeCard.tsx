@@ -23,6 +23,26 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
       : recipe.matchPercent >= 70 ? "bg-accent/20 text-accent-foreground"
       : "bg-muted text-muted-foreground";
 
+  const shareToWhatsApp = () => {
+    const lines = [
+      `${recipe.emoji} *${recipe.title}*`,
+      "",
+      recipe.description,
+      "",
+      `⏱️ ${recipe.cookTime}  •  👨‍🍳 ${recipe.difficulty}  •  🍽️ ${recipe.servings}`,
+      "",
+      "*Bahan:*",
+      ...recipe.usedIngredients.map(b => `• ${b}`),
+    ];
+    if (recipe.missingIngredients.length > 0) {
+      lines.push("", "*Perlu beli:*", ...recipe.missingIngredients.map(b => `• ${b}`));
+    }
+    lines.push("", "*Langkah:*", ...recipe.steps.map((s, i) => `${i + 1}. ${s}`));
+    lines.push("", "_Dibagikan dari Resepku — by Gibikey Studio_");
+    const text = encodeURIComponent(lines.join("\n"));
+    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <article
       className="group overflow-hidden rounded-2xl bg-gradient-card shadow-soft transition-smooth hover:shadow-warm hover:-translate-y-1 animate-fade-in-up"
