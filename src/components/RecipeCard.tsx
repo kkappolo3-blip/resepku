@@ -82,22 +82,22 @@ export const RecipeCard = ({ recipe, index, isFavorite, onToggleFavorite }: Reci
 
   return (
     <article
-      className="group overflow-hidden rounded-2xl bg-gradient-card shadow-soft transition-smooth hover:shadow-warm hover:-translate-y-1 animate-fade-in-up"
+      className="group overflow-hidden rounded-2xl bg-gradient-card shadow-soft transition-smooth hover:shadow-warm hover:-translate-y-1 active:scale-[0.99] animate-fade-in-up"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="text-4xl leading-none transition-smooth group-hover:scale-110 group-hover:rotate-6 inline-block">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <span className="text-3xl sm:text-4xl leading-none transition-smooth group-hover:scale-110 group-hover:rotate-6 inline-block shrink-0">
               {recipe.emoji}
             </span>
-            <div>
-              <h3 className="font-display text-xl font-bold text-foreground">{recipe.title}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">{recipe.description}</p>
+            <div className="min-w-0">
+              <h3 className="font-display text-base sm:text-xl font-bold text-foreground leading-tight break-words">{recipe.title}</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-0.5">{recipe.description}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", matchColor)}>
+          <div className="flex flex-col items-end gap-1.5 shrink-0">
+            <span className={cn("rounded-full px-2 py-0.5 text-[11px] sm:text-xs font-bold", matchColor)}>
               {recipe.matchPercent}%
             </span>
             {onToggleFavorite && (
@@ -106,43 +106,43 @@ export const RecipeCard = ({ recipe, index, isFavorite, onToggleFavorite }: Reci
                 aria-label={isFavorite ? "Hapus dari favorit" : "Tambah ke favorit"}
                 aria-pressed={isFavorite}
                 className={cn(
-                  "rounded-full p-1.5 transition-smooth",
+                  "rounded-full p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center transition-smooth active:scale-95",
                   isFavorite
                     ? "bg-primary/15 text-primary hover:bg-primary/25"
                     : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary"
                 )}
               >
-                <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+                <Heart className={cn("h-5 w-5", isFavorite && "fill-current")} />
               </button>
             )}
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+        <div className="mt-3 sm:mt-4 flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {recipe.cookTime}</span>
           <span className="inline-flex items-center gap-1"><ChefHat className="h-3.5 w-3.5" /> {recipe.difficulty}</span>
           <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5" /> {recipe.servings}</span>
         </div>
 
         {recipe.missingIngredients.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center gap-1.5 text-xs">
-            <ShoppingBasket className="h-3.5 w-3.5 text-primary" />
+          <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-1.5 text-xs">
+            <ShoppingBasket className="h-3.5 w-3.5 text-primary shrink-0" />
             <span className="font-medium text-foreground">Perlu beli:</span>
             <span className="text-muted-foreground">{recipe.missingIngredients.join(", ")}</span>
           </div>
         )}
 
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={() => setOpen(o => !o)}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-3 min-h-[44px] text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground active:scale-[0.98]"
           >
             {open ? "Sembunyikan resep" : "Lihat resep lengkap"}
             <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
           </button>
           <button
             onClick={shareToWhatsApp}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-sm font-semibold text-white transition-smooth hover:opacity-90"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-3 min-h-[44px] text-sm font-semibold text-white transition-smooth hover:opacity-90 active:scale-[0.98]"
             aria-label="Bagikan resep ke WhatsApp"
           >
             <Share2 className="h-4 w-4" />
