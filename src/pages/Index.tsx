@@ -180,7 +180,7 @@ const Index = () => {
       </section>
 
       <footer className="container mx-auto px-4 max-w-3xl pb-10 text-center text-xs text-muted-foreground">
-        Dibuat dengan ❤️ — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
+        Dibuat dengan ❤️ oleh <span className="font-semibold text-foreground">Gibikey Studio</span> — bumbu dapur dasar (garam, gula, minyak, bawang) dianggap selalu tersedia.
       </footer>
     </main>
   );

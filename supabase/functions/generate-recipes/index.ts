@@ -89,7 +89,7 @@ serve(async (req) => {
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Kredit AI habis. Silakan tambahkan kredit di workspace Lovable." }), {
+        return new Response(JSON.stringify({ error: "Kredit AI habis. Silakan hubungi admin Gibikey Studio." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
