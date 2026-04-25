@@ -103,7 +103,8 @@ const About = () => {
                   © {new Date().getFullYear()} Gibikey Studio. All rights reserved.
                 </p>
               </div>
-            </div>          </div>
+            </div>
+          </div>
 
           {/* Footer */}
           <div className="mt-10 pt-6 border-t border-border/50 text-center">
