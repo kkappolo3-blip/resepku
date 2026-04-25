@@ -78,13 +78,23 @@ export const RecipeCard = ({ recipe, index }: { recipe: Recipe; index: number })
           </div>
         )}
 
-        <button
-          onClick={() => setOpen(o => !o)}
-          className="mt-5 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground"
-        >
-          {open ? "Sembunyikan resep" : "Lihat resep lengkap"}
-          <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
-        </button>
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            onClick={() => setOpen(o => !o)}
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary hover:text-primary-foreground"
+          >
+            {open ? "Sembunyikan resep" : "Lihat resep lengkap"}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+          </button>
+          <button
+            onClick={shareToWhatsApp}
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-sm font-semibold text-white transition-smooth hover:opacity-90"
+            aria-label="Bagikan resep ke WhatsApp"
+          >
+            <Share2 className="h-4 w-4" />
+            Bagikan ke WhatsApp
+          </button>
+        </div>
 
         {open && (
           <div className="mt-5 space-y-4 animate-fade-in-up">
