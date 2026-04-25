@@ -1,6 +1,7 @@
 import { Info, Heart, Sparkles, ChefHat, ArrowLeft, User, Facebook } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import logo from "@/assets/logo.png";
+import creatorPhoto from "@/assets/mohamad-khair.png";
 
 const About = () => {
   return (
@@ -80,9 +81,16 @@ const About = () => {
               </div>
               <div className="flex-1">
                 <h2 className="font-display text-lg font-semibold text-foreground">Pembuat Aplikasi</h2>
-                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                  Aplikasi ini dibuat oleh <span className="font-semibold text-foreground">Bripka Mohamad Khair</span>, seorang anggota Polri yang juga senang berkreasi di dunia digital. Resepku adalah salah satu karya yang lahir dari kecintaan pada teknologi dan masakan Indonesia.
-                </p>
+                <div className="mt-3 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                  <img
+                    src={creatorPhoto}
+                    alt="Foto Bripka Mohamad Khair"
+                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover shadow-warm border border-border/50 shrink-0"
+                  />
+                  <p className="text-sm text-muted-foreground leading-relaxed text-center sm:text-left">
+                    Aplikasi ini dibuat oleh <span className="font-semibold text-foreground">Bripka Mohamad Khair</span>, seorang anggota Polri yang juga senang berkreasi di dunia digital. Resepku adalah salah satu karya yang lahir dari kecintaan pada teknologi dan masakan Indonesia.
+                  </p>
+                </div>
                 <a
                   href="https://www.facebook.com/kaka.gibikey.khair"
                   target="_blank"
