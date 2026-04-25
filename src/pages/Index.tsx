@@ -135,19 +135,22 @@ const Index = () => {
           <label className="text-sm font-semibold text-foreground">Bahan yang kamu punya</label>
 
           <div className="mt-3 flex gap-2">
-            <div className="flex-1 flex items-center gap-2 rounded-2xl border border-input bg-background px-4 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-smooth">
+            <div className="flex-1 flex items-center gap-2 rounded-2xl border border-input bg-background px-4 py-3 min-h-[48px] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-smooth">
               <Plus className="h-4 w-4 text-muted-foreground shrink-0" />
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={onKey}
                 placeholder="contoh: telur, ayam, bawang…"
-                className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground/60"
+                inputMode="text"
+                autoComplete="off"
+                autoCapitalize="none"
+                className="flex-1 bg-transparent outline-none text-base sm:text-sm placeholder:text-muted-foreground/60"
               />
             </div>
             <button
               onClick={() => addIngredient(input)}
-              className="rounded-2xl bg-foreground px-4 text-sm font-semibold text-background transition-smooth hover:bg-foreground/85"
+              className="rounded-2xl bg-foreground px-5 min-h-[48px] text-sm font-semibold text-background transition-smooth hover:bg-foreground/85 active:scale-95"
             >
               Tambah
             </button>
