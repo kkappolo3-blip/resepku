@@ -154,7 +154,7 @@ export const RecipeCard = ({ recipe, index, isFavorite, onToggleFavorite }: Reci
           <div className="mt-5 space-y-4 animate-fade-in-up">
             <div>
               <h4 className="text-sm font-bold text-foreground mb-2">Bahan yang dipakai</h4>
-              <ul className="grid grid-cols-2 gap-1.5 text-sm text-muted-foreground">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-muted-foreground">
                 {recipe.usedIngredients.map((b, i) => (
                   <li key={i} className="inline-flex items-center gap-1.5">
                     <Check className="h-3.5 w-3.5 text-primary shrink-0" /> {b}
