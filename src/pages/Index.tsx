@@ -132,22 +132,49 @@ const Index = () => {
             </div>
           )}
 
-          {ingredients.length === 0 && (
-            <div className="mt-4">
-              <p className="text-xs text-muted-foreground mb-2">Saran cepat:</p>
-              <div className="flex flex-wrap gap-2">
-                {SUGGESTED.map(s => (
+          {ingredients.length === 0 && (() => {
+            const lowerHistory = history.map(h => h.toLowerCase());
+            const merged = [
+              ...history,
+              ...SUGGESTED.filter(s => !lowerHistory.includes(s.toLowerCase())),
+            ];
+            return (
+              <div className="mt-4">
+                <p className="text-xs text-muted-foreground mb-2">
+                  Saran cepat{history.length > 0 ? " (riwayat kamu di depan)" : ""}:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {merged.map((s, i) => {
+                    const isHistory = i < history.length;
+                    return (
+                      <button
+                        key={`${s}-${i}`}
+                        onClick={() => addIngredient(s)}
+                        className={
+                          isHistory
+                            ? "rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary font-medium transition-smooth hover:bg-primary hover:text-primary-foreground"
+                            : "rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                        }
+                      >
+                        + {s}
+                      </button>
+                    );
+                  })}
+                </div>
+                {history.length > 0 && (
                   <button
-                    key={s}
-                    onClick={() => addIngredient(s)}
-                    className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/80 transition-smooth hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                    onClick={() => {
+                      setHistory([]);
+                      try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
+                    }}
+                    className="mt-2 text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2"
                   >
-                    + {s}
+                    Hapus riwayat
                   </button>
-                ))}
+                )}
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           <button
             onClick={handleGenerate}
